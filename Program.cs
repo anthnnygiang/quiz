@@ -24,19 +24,10 @@ public class Program
         //
         // foreach (var question in questions)
         // {
-        //     Ask(question);
+        //     question.Ask();
         // }
     }
 
-    static void Ask(QuestionAnswer questionAnswer)
-    {
-        var response = AnsiConsole.Ask<string>($"{questionAnswer.Question} ");
-        var isCorrect = questionAnswer.IsCorrectAnswer(response);
-        var icon = isCorrect ? "[green]✔[/]" : "[red]✗[/]";
-
-        AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
-        AnsiConsole.MarkupLine($"{questionAnswer.Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
-    }
 }
 
 internal class ListCommand : Command<ListCommand.Settings>
