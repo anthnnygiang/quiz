@@ -10,18 +10,27 @@ Questions in code are represented as:
 new Question("Question text", "Answer", new CultureInfo("ja-JP"))
 ```
 
-For tsv-backed quizzes, keep the existing two-column format or add an optional culture column:
-
-```tsv
-question,answer
+use JSON
+```json
+[
+  {
+    "question": "Cái gì có thể bay nhưng không có cánh?",
+    "answer": "Con chim",
+    "culture": "vi-VN"
+  },
+  {
+    "question": "What has keys but can't open locks?",
+    "answer": "A piano",
+    "culture": "en-US"
+  },
+  {
+    "question": "カタカナで「コンピュータ」と書いてください。",
+    "answer": "コンピュータ",
+    "culture": "ja-JP"
+  }
+]
 ```
 
-```tsv
-question    answer  culture
-What is the capital of France?  Paris   
-Tiếng Việt: thủ đô của Việt Nam là gì?  Hà Nội  vi-VN
-日本語: 日本の首都はどこですか？   とうきょう   ja-JP
-```
 
 Comparison behavior:
 
