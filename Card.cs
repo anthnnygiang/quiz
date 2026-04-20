@@ -1,9 +1,9 @@
 using System.Globalization;
 using Spectre.Console;
 
-namespace Learn;
+namespace Quiz;
 
-internal sealed record Query(string Question, string Answer, CultureInfo? Culture = null)
+internal sealed record Card(string Question, string Answer, CultureInfo? Culture = null)
 {
     public void Ask()
     {
