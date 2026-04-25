@@ -36,23 +36,7 @@ public class Card(string question, string answer, string culture)
         return cultureInfo;
     }
 
-    public void Ask()
-    {
-        var response = AnsiConsole.Ask<string>($"{Question.EscapeMarkup()} ");
-        var match = GetAnswerMatch(response);
-        var icon = match switch
-        {
-            AnswerMatch.Correct => "[green]✔[/]",
-            AnswerMatch.Close => "[yellow]-[/]",
-            AnswerMatch.Incorrect => "[red]✗[/]",
-            _ => string.Empty,
-        };
-
-        AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
-        AnsiConsole.MarkupLine($"{Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
-    }
-
-    private AnswerMatch GetAnswerMatch(string response)
+    public AnswerMatch CheckAnswer(string response)
     {
         if (IsCorrectAnswer(response, Answer))
         {

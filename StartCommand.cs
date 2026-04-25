@@ -29,8 +29,20 @@ public class StartCommand : Command<StartCommand.Settings>
 
         for (var i = 0; i < cards.Count; i++)
         {
-            AnsiConsole.Markup($"[grey]{i + 1}. [/]");
-            cards[i].Ask();
+            // AnsiConsole.Markup($"[grey]{i + 1}. [/]");
+            var questionNumber = $"[grey]{i + 1}.[/]";
+            var response = AnsiConsole.Ask<string>($"{questionNumber} {cards[i].Question.EscapeMarkup()} ");
+            var match = cards[i].CheckAnswer(response);
+            AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
+            var icon = match switch
+            {
+                AnswerMatch.Correct => "[green1](✔)[/]",
+                AnswerMatch.Close => "[orange1](-)[/]",
+                AnswerMatch.Incorrect => "[red1](✗)[/]",
+                _ => string.Empty,
+            };
+            AnsiConsole.MarkupLine(
+                $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
         }
 
         return 0;
