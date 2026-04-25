@@ -1,13 +1,11 @@
 using System.Globalization;
 using System.Text;
-using Spectre.Console;
 
 namespace Quiz;
 
 public enum AnswerMatch
 {
     Correct,
-    Close,
     Incorrect,
 }
 
@@ -43,11 +41,6 @@ public class Card(string question, string answer, string culture)
             return AnswerMatch.Correct;
         }
 
-        if (IsCloseAnswer(response, Answer))
-        {
-            return AnswerMatch.Close;
-        }
-
         return AnswerMatch.Incorrect;
     }
 
@@ -55,13 +48,6 @@ public class Card(string question, string answer, string culture)
     {
         var normalizedResponse = NormalizeForCorrectComparison(response);
         var normalizedAnswer = NormalizeForCorrectComparison(answer);
-        return CultureInfo.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(CultureInfo)) == 0;
-    }
-
-    private bool IsCloseAnswer(string response, string answer)
-    {
-        var normalizedResponse = NormalizeForCloseComparison(response);
-        var normalizedAnswer = NormalizeForCloseComparison(answer);
         return CultureInfo.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(CultureInfo)) == 0;
     }
 
@@ -77,49 +63,6 @@ public class Card(string question, string answer, string culture)
         return string.Join(' ', normalized.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
     }
 
-    private static string NormalizeForCloseComparison(string value)
-    {
-        var normalized = NormalizeForCorrectComparison(value);
-
-        if (normalized.Length == 0)
-        {
-            return string.Empty;
-        }
-
-        var builder = new StringBuilder(normalized.Length);
-
-        foreach (var c in normalized)
-        {
-            if (char.IsWhiteSpace(c) || IsIgnoredCloseMatchCharacter(c))
-            {
-                continue;
-            }
-
-            builder.Append(c);
-        }
-
-        return builder.ToString();
-    }
-
-    // Characters that are ignored for close match comparison (e.g. punctuation, symbols)
-    private static bool IsIgnoredCloseMatchCharacter(char c)
-    {
-        return char.GetUnicodeCategory(c) switch
-        {
-            UnicodeCategory.ConnectorPunctuation or
-                UnicodeCategory.DashPunctuation or
-                UnicodeCategory.OpenPunctuation or
-                UnicodeCategory.ClosePunctuation or
-                UnicodeCategory.InitialQuotePunctuation or
-                UnicodeCategory.FinalQuotePunctuation or
-                UnicodeCategory.OtherPunctuation or
-                UnicodeCategory.MathSymbol or
-                UnicodeCategory.CurrencySymbol or
-                UnicodeCategory.ModifierSymbol or
-                UnicodeCategory.OtherSymbol => true,
-            _ => false,
-        };
-    }
 
     private static CompareOptions GetCompareOptions(CultureInfo cultureInfo)
     {

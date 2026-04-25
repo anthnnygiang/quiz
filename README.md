@@ -2,6 +2,7 @@
 
 Quiz CLI with culture-aware answer matching.
 
+
 ## TODO:
 find better colors for breakdown chart
 
@@ -24,7 +25,24 @@ JSON format
   }
 ]
 
+
 ```
+Common culture values:
+1. en-US - English (United States)
+2. en-GB - English (United Kingdom)
+3. es-419 - Spanish (Latin America and Caribbean)
+4. fr-FR - French (France)
+5. it-IT - Italian (Italy)
+6. de-DE - German (Germany)
+7. ru-RU - Russian (Russia)
+8. pt-BR - Portuguese (Brazil)
+9. hi-IN - Hindi (India)
+10. zh-Hans-CN - Chinese (Simplified, China)
+11. ja-JP - Japanese (Japan)
+12. ko-KR - Korean (South Korea)
+13. vi-VN - Vietnamese (Vietnam)
+14. id-ID - Indonesian (Indonesia)
+15. el-GR - Greek (Greece)
 
 Parse quiz file
 Load into memory

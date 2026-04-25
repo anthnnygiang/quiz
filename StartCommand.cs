@@ -28,7 +28,6 @@ public class StartCommand : Command<StartCommand.Settings>
         }
 
         var correctAnswers = 0;
-        var closeAnswers = 0;
         var incorrectAnswers = 0;
 
         for (var i = 0; i < cards.Count; i++)
@@ -45,10 +44,6 @@ public class StartCommand : Command<StartCommand.Settings>
                     icon = "[green1](✔)[/]";
                     correctAnswers++;
                     break;
-                case AnswerMatch.Close:
-                    icon = "[orange1](-)[/]";
-                    closeAnswers++;
-                    break;
                 case AnswerMatch.Incorrect:
                     icon = "[red1](✗)[/]";
                     incorrectAnswers++;
@@ -64,7 +59,6 @@ public class StartCommand : Command<StartCommand.Settings>
 
         var breakdownChart = new BreakdownChart()
             .AddItem("Correct", correctAnswers, Color.Green1)
-            .AddItem("Close", closeAnswers, Color.Orange1)
             .AddItem("Incorrect", incorrectAnswers, Color.Red1);
         AnsiConsole.Write(breakdownChart);
         return 0;
