@@ -57,6 +57,7 @@ public class StartCommand : Command<StartCommand.Settings>
                 $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
         }
 
+        AnsiConsole.MarkupLine($"Results:");
         var breakdownChart = new BreakdownChart()
             .AddItem("Correct", correctAnswers, Color.Green1)
             .AddItem("Incorrect", incorrectAnswers, Color.Red1);
@@ -105,7 +106,7 @@ public class StartCommand : Command<StartCommand.Settings>
                 return null;
             }
 
-            AnsiConsole.MarkupLine($"[green]{cards.Count} question(s)[/]");
+            AnsiConsole.MarkupLine($"[cyan]{cards.Count} question(s)[/]");
             return cards;
         }
         catch (Exception ex)
