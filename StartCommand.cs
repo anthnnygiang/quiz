@@ -27,6 +27,10 @@ public class StartCommand : Command<StartCommand.Settings>
             return 1;
         }
 
+        var correctAnswers = 0;
+        var closeAnswers = 0;
+        var incorrectAnswers = 0;
+
         for (var i = 0; i < cards.Count; i++)
         {
             // AnsiConsole.Markup($"[grey]{i + 1}. [/]");
@@ -34,17 +38,35 @@ public class StartCommand : Command<StartCommand.Settings>
             var response = AnsiConsole.Ask<string>($"{questionNumber} {cards[i].Question.EscapeMarkup()} ");
             var match = cards[i].CheckAnswer(response);
             AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
-            var icon = match switch
+            string icon;
+            switch (match)
             {
-                AnswerMatch.Correct => "[green1](✔)[/]",
-                AnswerMatch.Close => "[orange1](-)[/]",
-                AnswerMatch.Incorrect => "[red1](✗)[/]",
-                _ => string.Empty,
-            };
+                case AnswerMatch.Correct:
+                    icon = "[green1](✔)[/]";
+                    correctAnswers++;
+                    break;
+                case AnswerMatch.Close:
+                    icon = "[orange1](-)[/]";
+                    closeAnswers++;
+                    break;
+                case AnswerMatch.Incorrect:
+                    icon = "[red1](✗)[/]";
+                    incorrectAnswers++;
+                    break;
+                default:
+                    icon = string.Empty;
+                    break;
+            }
+
             AnsiConsole.MarkupLine(
                 $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
         }
 
+        var breakdownChart = new BreakdownChart()
+            .AddItem("Correct", correctAnswers, Color.Green1)
+            .AddItem("Close", closeAnswers, Color.Orange1)
+            .AddItem("Incorrect", incorrectAnswers, Color.Red1);
+        AnsiConsole.Write(breakdownChart);
         return 0;
     }
 

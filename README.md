@@ -2,6 +2,9 @@
 
 Quiz CLI with culture-aware answer matching.
 
+## TODO:
+find better colors for breakdown chart
+
 ## Usage
 
 Quiz files are represented as:
@@ -47,5 +50,5 @@ $ quiz start <file.json>
 ## Uncertain Future
 * retry wrong answers
 * multiple answers per question
-* ai?
+* llm?
 
