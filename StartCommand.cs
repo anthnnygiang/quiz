@@ -52,10 +52,14 @@ public class StartCommand : Command<StartCommand.Settings>
 
         try
         {
-            var cards = JsonSerializer.Deserialize<List<Card>>(
-                File.ReadAllText(filePath),
-                JsonOptions);
-            
+            using var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            );
+            var cards = JsonSerializer.Deserialize<List<Card>>(stream, JsonOptions);
+
             // file contains 'null' or '[]'
             if (cards is null || cards.Count == 0)
             {
@@ -71,6 +75,7 @@ public class StartCommand : Command<StartCommand.Settings>
                 AnsiConsole.MarkupLine($"[red]Quiz file contains invalid quiz items:[/] {filePath.EscapeMarkup()}");
                 return null;
             }
+
             AnsiConsole.MarkupLine($"Loaded {cards.Count} cards");
             return cards;
         }
