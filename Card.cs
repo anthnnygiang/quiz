@@ -13,9 +13,10 @@ public enum AnswerMatch
 
 public class Card(string question, string answer, string culture)
 {
-    private string Question { get; } = question;
-    private string Answer { get; } = answer;
-    private CultureInfo Culture { get; } = GetCulture(culture);
+    public string Question { get; } = question;
+    public string Answer { get; } = answer;
+    public string Culture { get; } = culture;
+    private CultureInfo CultureInfo { get; } = GetCulture(culture);
     private static readonly Dictionary<string, CultureInfo> CultureDictionary = new(StringComparer.OrdinalIgnoreCase);
 
     private static CultureInfo GetCulture(string culture)
@@ -37,7 +38,7 @@ public class Card(string question, string answer, string culture)
 
     public void Ask()
     {
-        var response = AnsiConsole.Ask<string>($"{Question} ");
+        var response = AnsiConsole.Ask<string>($"{Question.EscapeMarkup()} ");
         var match = GetAnswerMatch(response);
         var icon = match switch
         {
@@ -70,14 +71,14 @@ public class Card(string question, string answer, string culture)
     {
         var normalizedResponse = NormalizeForCorrectComparison(response);
         var normalizedAnswer = NormalizeForCorrectComparison(answer);
-        return Culture.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(Culture)) == 0;
+        return CultureInfo.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(CultureInfo)) == 0;
     }
 
     private bool IsCloseAnswer(string response, string answer)
     {
         var normalizedResponse = NormalizeForCloseComparison(response);
         var normalizedAnswer = NormalizeForCloseComparison(answer);
-        return Culture.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(Culture)) == 0;
+        return CultureInfo.CompareInfo.Compare(normalizedResponse, normalizedAnswer, GetCompareOptions(CultureInfo)) == 0;
     }
 
     private static string NormalizeForCorrectComparison(string value)

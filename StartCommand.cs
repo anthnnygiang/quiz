@@ -1,5 +1,6 @@
 using System.ComponentModel;
-using System.Globalization;
+using System.Text.Json;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Quiz;
@@ -8,56 +9,75 @@ public class StartCommand : Command<StartCommand.Settings>
 {
     public class Settings : CommandSettings
     {
-        [CommandArgument(0, "<file.tsv>")]
+        [CommandArgument(0, "<file.json>")]
         [Description("The quiz file")]
         public required string QuizFile { get; init; }
     }
 
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellation)
     {
-        // read quiz files form .quiz directory and start quiz
-        Console.WriteLine(settings.QuizFile);
         const string quizDirectory = ".quiz";
         var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), quizDirectory,
             settings.QuizFile);
-        if (!IsValidQuizFile(filePath))
+        var cards = LoadQuizFile(filePath);
+        if (cards is null)
         {
             return 1;
         }
 
-        foreach (var line in File.ReadLines(filePath))
+        foreach (var card in cards)
         {
-            Console.WriteLine(line);
-            var cols = line.Split('\t');
-            var card = new Card(cols[0], cols[1], cols[2]);
             card.Ask();
         }
 
         return 0;
     }
 
-    private static bool IsValidQuizFile(string filePath)
+    private static List<Card>? LoadQuizFile(string filePath)
     {
-        // check tsv format
-        const int expectedCols = 3;
         if (!File.Exists(filePath))
         {
-            Console.WriteLine($"File not found: {filePath}");
-            return false;
+            AnsiConsole.MarkupLine($"[red]Quiz file not found:[/] {filePath.EscapeMarkup()}");
+            return null;
         }
 
-        if (!Path.GetExtension(filePath).Equals(".tsv", StringComparison.OrdinalIgnoreCase))
+        if (!Path.GetExtension(filePath).Equals(".json", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"Invalid file extension: {filePath}. Expected .tsv");
-            return false;
+            AnsiConsole.MarkupLine(
+                $"[red]Invalid quiz file:[/] {filePath.EscapeMarkup()} [grey](expected a .json file)[/]");
+            return null;
         }
 
-        if (File.ReadLines(filePath).Select(line => line.Split('\t')).Any(cols => cols.Length != expectedCols))
+        try
         {
-            Console.WriteLine($"Expected {expectedCols} columns separated by tabs");
-            return false;
-        }
+            var cards = JsonSerializer.Deserialize<List<Card>>(
+                File.ReadAllText(filePath),
+                JsonOptions);
+            
+            // file contains 'null' or '[]'
+            if (cards is null || cards.Count == 0)
+            {
+                AnsiConsole.MarkupLine($"[red]Quiz file is empty:[/] {filePath.EscapeMarkup()}");
+                return null;
+            }
 
-        return true;
+            // All cards must have non-empty question, answer, and culture properties
+            if (cards.Any(card => string.IsNullOrWhiteSpace(card.Question) ||
+                                  string.IsNullOrWhiteSpace(card.Answer) ||
+                                  string.IsNullOrWhiteSpace(card.Culture)))
+            {
+                AnsiConsole.MarkupLine($"[red]Quiz file contains invalid quiz items:[/] {filePath.EscapeMarkup()}");
+                return null;
+            }
+            AnsiConsole.MarkupLine($"Loaded {cards.Count} cards");
+            return cards;
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to load quiz file:[/] {ex.Message.EscapeMarkup()}");
+            return null;
+        }
     }
 }

@@ -21,22 +21,22 @@ internal class ListCommand : Command<ListCommand.Settings>
         return 0;
     }
 
-    // Recursively populate the tree with .tsv files and subdirectories
+    // Recursively populate the tree with .json files and subdirectories
     private static void PopulateTree(string directoryPath, IHasTreeNodes parentNode)
     {
         try
         {
-            var tsvFiles = Directory.GetFiles(directoryPath, "*.tsv");
-            Array.Sort(tsvFiles, static (left, right) =>
+            var jsonFiles = Directory.GetFiles(directoryPath, "*.json");
+            Array.Sort(jsonFiles, static (left, right) =>
                 StringComparer.OrdinalIgnoreCase.Compare(Path.GetFileName(left), Path.GetFileName(right)));
 
             var subdirectories = Directory.GetDirectories(directoryPath);
             Array.Sort(subdirectories, static (left, right) =>
                 StringComparer.OrdinalIgnoreCase.Compare(Path.GetFileName(left), Path.GetFileName(right)));
 
-            if (tsvFiles.Length > 0) // Add tsv files to the tree
+            if (jsonFiles.Length > 0) // Add quiz files to the tree
             {
-                foreach (var file in tsvFiles)
+                foreach (var file in jsonFiles)
                 {
                     var fileName = Path.GetFileName(file);
                     parentNode.AddNode($"{fileName.EscapeMarkup()}");
@@ -53,7 +53,7 @@ internal class ListCommand : Command<ListCommand.Settings>
                 }
             }
 
-            if (tsvFiles.Length == 0 && subdirectories.Length == 0) // No files or subdirectories
+            if (jsonFiles.Length == 0 && subdirectories.Length == 0) // No files or subdirectories
             {
                 parentNode.AddNode("[dim]empty[/]");
             }

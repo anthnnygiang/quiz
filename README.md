@@ -4,33 +4,32 @@ Quiz CLI with culture-aware answer matching.
 
 ## Usage
 
-Questions in code are represented as:
+Quiz files are represented as:
 
-```csharp
-new Question("Question text", "Answer", new CultureInfo("ja-JP"))
-```
-
-use JSON
+JSON format
 ```json
 [
   {
-    "question": "Cái gì có thể bay nhưng không có cánh?",
-    "answer": "Con chim",
-    "culture": "vi-VN"
-  },
-  {
-    "question": "What has keys but can't open locks?",
-    "answer": "A piano",
+    "question": "What is the capital of France?",
+    "answer": "Paris",
     "culture": "en-US"
   },
   {
-    "question": "カタカナで「コンピュータ」と書いてください。",
-    "answer": "コンピュータ",
-    "culture": "ja-JP"
+    "question": "What is the largest planet in our solar system?",
+    "answer": "Jupiter",
+    "culture": "en-US"
   }
 ]
+
 ```
 
+Parse quiz file
+Load into memory
+--shuffle --tags easy geography
+Start quiz
+Show total questions number
+Show current question number
+Show results BreakdownChart
 
 Comparison behavior:
 
@@ -39,13 +38,14 @@ Comparison behavior:
 * `ja-JP` ignores case, kana type, and full-width vs half-width differences
 
 ```bash
-$ quiz <file.tsv>
+$ quiz start <file.json>
 ```
-* shows results at end of quiz
+* shows results at end of quiz (chart, animation)
 * instant feedback on each question
 * list quiz files in tree structure
 
-## Future
+## Uncertain Future
 * retry wrong answers
 * multiple answers per question
 * ai?
+
