@@ -27,9 +27,10 @@ public class StartCommand : Command<StartCommand.Settings>
             return 1;
         }
 
-        foreach (var card in cards)
+        for (var i = 0; i < cards.Count; i++)
         {
-            card.Ask();
+            AnsiConsole.Markup($"[grey]{i + 1}. [/]");
+            cards[i].Ask();
         }
 
         return 0;
@@ -76,7 +77,7 @@ public class StartCommand : Command<StartCommand.Settings>
                 return null;
             }
 
-            AnsiConsole.MarkupLine($"Loaded {cards.Count} cards");
+            AnsiConsole.MarkupLine($"[green]{cards.Count} question(s)[/]");
             return cards;
         }
         catch (Exception ex)
