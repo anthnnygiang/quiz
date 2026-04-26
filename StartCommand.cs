@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Text.Json;
+
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -12,9 +13,14 @@ public class StartCommand : Command<StartCommand.Settings>
         [CommandArgument(0, "<file.json>")]
         [Description("The quiz file")]
         public required string QuizFile { get; init; }
+
+        [CommandOption("-s|--shuffle")]
+        [Description("Shuffle the quiz questions")]
+        public bool Shuffle { get; init; }
     }
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly Random Rng = new();
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellation)
     {
@@ -25,6 +31,10 @@ public class StartCommand : Command<StartCommand.Settings>
         if (cards is null)
         {
             return 1;
+        }
+        if (settings.Shuffle)
+        {
+            ShuffleList(cards);
         }
 
         var correctAnswers = 0;
@@ -113,6 +123,17 @@ public class StartCommand : Command<StartCommand.Settings>
         {
             AnsiConsole.MarkupLine($"[red]Failed to load quiz file:[/] {ex.Message.EscapeMarkup()}");
             return null;
+        }
+
+    }
+    // Fisher-Yates shuffle algorithm
+    public static void ShuffleList<T>(IList<T> list)
+    {
+        var n = list.Count;
+        for (var i = n - 1; i > 0; i--)
+        {
+            var j = Rng.Next(i + 1); // random index from 0 to i
+            (list[i], list[j]) = (list[j], list[i]); // swap cards[i] with cards[j]
         }
     }
 }
