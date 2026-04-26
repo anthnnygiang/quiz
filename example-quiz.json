@@ -8,5 +8,10 @@
     "question": "What is the largest planet in our solar system?",
     "answer": "Jupiter",
     "culture": "en-US"
+  },
+  {
+    "question": "Translate into Vietnamese 'beef noodle soup':",
+    "answer": "phở bò",
+    "culture": "vi-VN"
   }
 ]

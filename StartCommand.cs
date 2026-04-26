@@ -33,7 +33,7 @@ public class StartCommand : Command<StartCommand.Settings>
         for (var i = 0; i < cards.Count; i++)
         {
             // AnsiConsole.Markup($"[grey]{i + 1}. [/]");
-            var questionNumber = $"[grey]{i + 1}.[/]";
+            var questionNumber = $"[dim]{i + 1}.[/]";
             var response = AnsiConsole.Ask<string>($"{questionNumber} {cards[i].Question.EscapeMarkup()} ");
             var match = cards[i].CheckAnswer(response);
             AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
@@ -41,11 +41,11 @@ public class StartCommand : Command<StartCommand.Settings>
             switch (match)
             {
                 case AnswerMatch.Correct:
-                    icon = "[green1](✔)[/]";
+                    icon = "[palegreen1](✔)[/]";
                     correctAnswers++;
                     break;
                 case AnswerMatch.Incorrect:
-                    icon = "[red1](✗)[/]";
+                    icon = "[orangered1](✗)[/]";
                     incorrectAnswers++;
                     break;
                 default:
@@ -57,10 +57,10 @@ public class StartCommand : Command<StartCommand.Settings>
                 $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
         }
 
-        AnsiConsole.MarkupLine($"Results:");
+        AnsiConsole.MarkupLine($"[dim]Results[/]");
         var breakdownChart = new BreakdownChart()
-            .AddItem("Correct", correctAnswers, Color.Green1)
-            .AddItem("Incorrect", incorrectAnswers, Color.Red1);
+            .AddItem("Correct", correctAnswers, Color.PaleGreen1)
+            .AddItem("Incorrect", incorrectAnswers, Color.OrangeRed1);
         AnsiConsole.Write(breakdownChart);
         return 0;
     }
@@ -106,7 +106,7 @@ public class StartCommand : Command<StartCommand.Settings>
                 return null;
             }
 
-            AnsiConsole.MarkupLine($"[cyan]{cards.Count} question(s)[/]");
+            AnsiConsole.MarkupLine($"[dim]{cards.Count} question(s)[/]");
             return cards;
         }
         catch (Exception ex)
