@@ -1,27 +1,59 @@
 # Quiz
 
-Quiz CLI with culture-aware answer matching.
+Simple quiz CLI with culture-aware answer matching.
 
+## Installation
+Install dotnet sdk/runtime from https://dotnet.microsoft.com/download
+Then pack and install the quiz tool globally from this repository:
+```bash
+$ dotnet pack -c Release
+$ dotnet tool install --global --add-source ./artifacts AnthonyGiang.Quiz
+```
 
-## TODO:
-find better colors for breakdown chart
+If you already have it installed, update it from the local package source instead:
+
+```bash
+$ dotnet tool update --global --add-source ./artifacts AnthonyGiang.Quiz
+```
+
+If `quiz` is not found afterwards, add the .NET tools directory to your `PATH`:
+
+```bash
+$ cat <<'EOF' >> ~/.zshrc
+export PATH="$PATH:$HOME/.dotnet/tools"
+EOF
+$ zsh -l
+```
 
 ## Usage
+List all quiz files in `$HOME/.quiz` directory:
+```bash
+$ quiz list
+```
+Start a quiz from a quiz file:
+```bash
+$ quiz start <file.json>
+```
 
-Quiz files are represented as:
+## Explanation
+Quiz files are represented as JSON arrays in the following format:
 
-JSON format
 ```json
 [
   {
-    "question": "What is the capital of France?",
-    "answer": "Paris",
-    "culture": "en-US"
+    "question": "What is the capital of Australia?",
+    "answer": "Canberra",
+    "culture": "en-AU"
   },
   {
-    "question": "What is the largest planet in our solar system?",
-    "answer": "Jupiter",
-    "culture": "en-US"
+    "question": "¿Cuál es la capital de España?",
+    "answer": "Madrid",
+    "culture": "es-419"
+  },
+  {
+    "question": "フランスの首都は何ですか？",
+    "answer": "パリ",
+    "culture": "ja-JP"
   }
 ]
 
@@ -43,30 +75,3 @@ Common culture values:
 13. vi-VN - Vietnamese (Vietnam)
 14. id-ID - Indonesian (Indonesia)
 15. el-GR - Greek (Greece)
-
-Parse quiz file
-Load into memory
---shuffle --tags easy geography
-Start quiz
-Show total questions number
-Show current question number
-Show results BreakdownChart
-
-Comparison behavior:
-
-* default questions use invariant, case-insensitive comparison
-* `vi-VN` keeps Vietnamese accents significant
-* `ja-JP` ignores case, kana type, and full-width vs half-width differences
-
-```bash
-$ quiz start <file.json>
-```
-* shows results at end of quiz (chart, animation)
-* instant feedback on each question
-* list quiz files in tree structure
-
-## Uncertain Future
-* retry wrong answers
-* multiple answers per question
-* llm?
-

@@ -5,11 +5,23 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>quiz</ToolCommandName>
+    <PackageId>AnthonyGiang.Quiz</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Anthony Giang</Authors>
+    <Description>Simple quiz CLI with culture-aware answer matching.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageOutputPath>$(MSBuildProjectDirectory)/artifacts</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.55.2" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
