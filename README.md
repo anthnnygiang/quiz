@@ -2,6 +2,8 @@
 
 Simple quiz CLI with culture-aware answer matching.
 
+![Example quiz session](./example.png)
+
 ## Installation
 Install dotnet sdk/runtime from https://dotnet.microsoft.com/download
 Then pack and install the quiz tool globally from this repository:
