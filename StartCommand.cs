@@ -42,7 +42,6 @@ public class StartCommand : Command<StartCommand.Settings>
 
         for (var i = 0; i < cards.Count; i++)
         {
-            // AnsiConsole.Markup($"[grey]{i + 1}. [/]");
             var questionNumber = $"[dim]{i + 1}.[/]";
             var response = AnsiConsole.Ask<string>($"{questionNumber} {cards[i].Question.EscapeMarkup()} ");
             var match = cards[i].CheckAnswer(response);
