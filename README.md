@@ -6,16 +6,27 @@ Simple quiz CLI with culture-aware answer matching.
 
 ## Installation
 Install dotnet sdk/runtime from https://dotnet.microsoft.com/download
-Then pack and install the quiz tool globally from this repository:
+
+Install `just`, then build, pack, and install the quiz tool globally from this repository:
+
+```bash
+$ just install
+```
+
+Run the same command again after code changes to reinstall the local tool package.
+
+Without `just`, pack and install the quiz tool manually:
+
 ```bash
 $ dotnet pack -c Release
 $ dotnet tool install --global --add-source ./artifacts AnthonyGiang.Quiz
 ```
 
-If you already have it installed, update it from the local package source instead:
+If you already have it installed and want to force a local reinstall manually:
 
 ```bash
-$ dotnet tool update --global --add-source ./artifacts AnthonyGiang.Quiz
+$ dotnet tool uninstall --global AnthonyGiang.Quiz
+$ dotnet tool install --global --add-source ./artifacts --no-cache AnthonyGiang.Quiz
 ```
 
 If `quiz` is not found afterwards, add the .NET tools directory to your `PATH`:
