@@ -47,23 +47,27 @@ public class StartCommand : Command<StartCommand.Settings>
             var match = cards[i].CheckAnswer(response);
             AnsiConsole.Write("\e[1A\e[2K"); // Clear the previous line
             string icon;
+            string ending;
             switch (match)
             {
                 case AnswerMatch.Correct:
                     icon = "[palegreen1](✔)[/]";
+                    ending = string.Empty;
                     correctAnswers++;
                     break;
                 case AnswerMatch.Incorrect:
                     icon = "[orangered1](✗)[/]";
+                    ending = $"[dim] {cards[i].Answer.EscapeMarkup()}[/]";
                     incorrectAnswers++;
                     break;
                 default:
                     icon = string.Empty;
+                    ending = string.Empty;
                     break;
             }
 
             AnsiConsole.MarkupLine(
-                $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}");
+                $"{questionNumber} {cards[i].Question.EscapeMarkup()} {response.EscapeMarkup()} {icon}{ending}");
         }
 
         AnsiConsole.MarkupLine($"[dim]Results[/]");
